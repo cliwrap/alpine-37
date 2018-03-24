@@ -43,7 +43,6 @@ if [ -d "$WORKDIR" ]; then
 fi
 
 if [ -n "$HOSTUID" ]; then
-  mkdir "$HOSTHOMEDIR"
   CHOWNGROUP="$HOSTUSERNAME"
   CHOWNUSER="$HOSTUIDNAME"
   USERADDCMD=$(quote adduser)
@@ -60,7 +59,8 @@ if [ -n "$HOSTUID" ]; then
   fi
   USERADDCMD="$USERADDCMD "$(quote "$HOSTUSERNAME")
   eval "$USERADDCMD"
-  chown -R "$HOSTUSERNAME":"$HOSTGID" "$HOSTHOMEDIR"
+  mkdir -p "$HOSTHOMEDIR"
+  chown "$HOSTUSERNAME":"$HOSTGID" "$HOSTHOMEDIR"
   if command -v sudo 2>&1 > /dev/null; then
     # Enable passwordless sudo
     printf "%s ALL=(ALL) NOPASSWD:ALL" "$HOSTUSERNAME" > \
