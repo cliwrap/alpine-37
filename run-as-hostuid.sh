@@ -43,24 +43,40 @@ if [ -d "$WORKDIR" ]; then
 fi
 
 if [ -n "$HOSTUID" ]; then
-  CHOWNGROUP="$HOSTUSERNAME"
-  CHOWNUSER="$HOSTUIDNAME"
-  USERADDCMD=$(quote adduser)
-  USERADDCMD="$USERADDCMD "$(quote '-D')
-  USERADDCMD="$USERADDCMD "$(quote '-s')
-  USERADDCMD="$USERADDCMD "$(quote '/bin/sh')
-  USERADDCMD="$USERADDCMD "$(quote '-u')
-  USERADDCMD="$USERADDCMD "$(quote "$HOSTUID")
-  if [ -n "$HOSTGID" ]; then
-    CHOWNGROUP="$HOSTGID"
-    addgroup -g "$HOSTGID" "$HOSTGROUPNAME"
-    USERADDCMD="$USERADDCMD "$(quote '-G')
-    USERADDCMD="$USERADDCMD "$(quote "$HOSTGROUPNAME")
+  # id -u doesn't work inside alpine3.7/busybox
+  if cut -d: -f3 /etc/passwd | grep "^${HOSTUID}$" 2>&1 > /dev/null; then
+    # User already exists
+    OIFS="$IFS"
+    IFS=":"
+    while read LINE; do
+      set -- $LINE
+      if [ "$3" = "${HOSTUID}" ]; then
+         HOSTUSERNAME="$1"
+         export HOSTUSERNAME
+      fi
+    done < /etc/passwd
+    IFS="$OIFS"
+  else
+    # User does not exist, need to add them
+    CHOWNGROUP="$HOSTUSERNAME"
+    CHOWNUSER="$HOSTUIDNAME"
+    USERADDCMD=$(quote adduser)
+    USERADDCMD="$USERADDCMD "$(quote '-D')
+    USERADDCMD="$USERADDCMD "$(quote '-s')
+    USERADDCMD="$USERADDCMD "$(quote '/bin/sh')
+    USERADDCMD="$USERADDCMD "$(quote '-u')
+    USERADDCMD="$USERADDCMD "$(quote "$HOSTUID")
+    if [ -n "$HOSTGID" ]; then
+      CHOWNGROUP="$HOSTGID"
+      addgroup -g "$HOSTGID" "$HOSTGROUPNAME"
+      USERADDCMD="$USERADDCMD "$(quote '-G')
+      USERADDCMD="$USERADDCMD "$(quote "$HOSTGROUPNAME")
+    fi
+    USERADDCMD="$USERADDCMD "$(quote "$HOSTUSERNAME")
+    eval "$USERADDCMD"
+    mkdir -p "$HOSTHOMEDIR"
+    chown "$HOSTUSERNAME":"$HOSTGID" "$HOSTHOMEDIR"
   fi
-  USERADDCMD="$USERADDCMD "$(quote "$HOSTUSERNAME")
-  eval "$USERADDCMD"
-  mkdir -p "$HOSTHOMEDIR"
-  chown "$HOSTUSERNAME":"$HOSTGID" "$HOSTHOMEDIR"
   if command -v sudo 2>&1 > /dev/null; then
     # Enable passwordless sudo
     printf "%s ALL=(ALL) NOPASSWD:ALL" "$HOSTUSERNAME" > \

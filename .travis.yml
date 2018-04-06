@@ -19,6 +19,15 @@ script:
   wtanaka/alpine-37-uid
   touch ActapWuSwyk2
   2>&1 && [ -f ActapWuSwyk2 ]
+# Create a file as root
+- >
+  docker run
+  --rm
+  -e "HOSTUID=0"
+  -v "`pwd`:/work"
+  wtanaka/alpine-37-uid
+  touch veOtkovem2
+  2>&1 && [ -f veOtkovem2 ]
 # Make sure the container works normally
 - docker run --rm wtanaka/alpine-37-uid whoami | grep '^root$'
 # Make sure the container works normally
