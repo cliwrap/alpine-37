@@ -1,0 +1,60 @@
+version: 2
+jobs:
+  build:
+    environment:
+      IMAGE_NAME: cliwrap/alpine-37
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:latest .
+      # Check user id
+      - run: >
+          docker run --rm -e "HOSTUID=`id -u`" -v "`pwd`:/work" cliwrap/alpine-37
+          id -u 2>&1 | grep "^`id -u`$"
+      # Check group id
+      - run: >
+          docker run --rm -e "HOSTUID=`id -u`" -e "HOSTGID=`id -g`" -v "`pwd`:/work"
+          cliwrap/alpine-37 id -g 2>&1 | grep "^`id -g`$"
+      # File outside is visible inside
+      - run: >
+          docker run --rm -e "HOSTUID=`id -u`" -e "HOSTGID=`id -g`" -v "`pwd`:/work"
+          cliwrap/alpine-37 find /work
+      # Create a file
+      - run: >
+          docker run
+          --rm
+          -e "HOSTUID=`id -u`"
+          -v "`pwd`:/work"
+          cliwrap/alpine-37
+          touch ActapWuSwyk2
+          2>&1 && [ -f ActapWuSwyk2 ]
+      # Create a file as root
+      - run: >
+          docker run
+          --rm
+          -e "HOSTUID=0"
+          -v "`pwd`:/work"
+          cliwrap/alpine-37
+          touch veOtkovem2
+          2>&1 && [ -f veOtkovem2 ]
+      # Make sure the container works normally
+      - run: docker run --rm cliwrap/alpine-37 whoami | grep '^root$'
+      # Make sure the container works normally
+      - run: docker run --rm cliwrap/alpine-37 pwd | grep '^/$'
+      # Test volume mount only
+      - run: docker run --rm -v "`pwd`:/work" cliwrap/alpine-37 pwd | grep '^/work$'
+      # Test volume mount only
+      - run: docker run --rm -v "`pwd`:/work" cliwrap/alpine-37 whoami | grep '^root$'
+      # Test user id only
+      - run: docker run --rm -e "HOSTUID=`id -u`" cliwrap/alpine-37 pwd | grep '^/home/hostuser$'
+      # Test user id only
+      - run: docker run --rm -e "HOSTUID=`id -u`" cliwrap/alpine-37 whoami | grep '^hostuser$'
+workflows:
+  version: 2
+  build-allbranches:
+    jobs:
+      - build
