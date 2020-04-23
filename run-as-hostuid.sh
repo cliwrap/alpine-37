@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2018 Wesley Tanaka
+# Copyright (C) 2020 Wesley Tanaka
 #
 # This file is part of docker-xenial-uid
 #
@@ -68,7 +68,12 @@ if [ -n "$HOSTUID" ]; then
     USERADDCMD="$USERADDCMD "$(quote "$HOSTUID")
     if [ -n "$HOSTGID" ]; then
       CHOWNGROUP="$HOSTGID"
-      addgroup -g "$HOSTGID" "$HOSTGROUPNAME"
+      EXISTING_GROUP="$(getent group "$HOSTGID" | cut -d: -f1)"
+      if [ -n "$EXISTING_GROUP" ]; then
+        HOSTGROUPNAME="$EXISTING_GROUP"
+      else
+        addgroup -g "$HOSTGID" "$HOSTGROUPNAME"
+      fi
       USERADDCMD="$USERADDCMD "$(quote '-G')
       USERADDCMD="$USERADDCMD "$(quote "$HOSTGROUPNAME")
     fi
