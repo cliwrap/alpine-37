@@ -1,13 +1,13 @@
 version: 2
 jobs:
   build:
+    machine:
+      image: ubuntu-1604:201903-01
+      docker_layer_caching: true    # default - false
     environment:
       IMAGE_NAME: cliwrap/alpine-37
-    docker:
-      - image: circleci/buildpack-deps:stretch
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Build Docker image
           command: docker build -t $IMAGE_NAME:latest .
