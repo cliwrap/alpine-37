@@ -1,22 +1,22 @@
 services:
 - docker
 script:
-- docker build -t wtanaka/alpine-37-uid .
+- docker build -t cliwrap/alpine-37 .
 # Check user id
 - >
-  docker run --rm -e "HOSTUID=`id -u`" -v "`pwd`:/work" wtanaka/alpine-37-uid
+  docker run --rm -e "HOSTUID=`id -u`" -v "`pwd`:/work" cliwrap/alpine-37
   id -u 2>&1 | grep "^`id -u`$"
 # Check group id
 - >
   docker run --rm -e "HOSTUID=`id -u`" -e "HOSTGID=`id -g`" -v "`pwd`:/work"
-  wtanaka/alpine-37-uid id -g 2>&1 | grep "^`id -g`$"
+  cliwrap/alpine-37 id -g 2>&1 | grep "^`id -g`$"
 # Create a file
 - >
   docker run
   --rm
   -e "HOSTUID=`id -u`"
   -v "`pwd`:/work"
-  wtanaka/alpine-37-uid
+  cliwrap/alpine-37
   touch ActapWuSwyk2
   2>&1 && [ -f ActapWuSwyk2 ]
 # Create a file as root
@@ -25,27 +25,27 @@ script:
   --rm
   -e "HOSTUID=0"
   -v "`pwd`:/work"
-  wtanaka/alpine-37-uid
+  cliwrap/alpine-37
   touch veOtkovem2
   2>&1 && [ -f veOtkovem2 ]
 # Make sure the container works normally
-- docker run --rm wtanaka/alpine-37-uid whoami | grep '^root$'
+- docker run --rm cliwrap/alpine-37 whoami | grep '^root$'
 # Make sure the container works normally
-- docker run --rm wtanaka/alpine-37-uid pwd | grep '^/$'
+- docker run --rm cliwrap/alpine-37 pwd | grep '^/$'
 # Test volume mount only
-- docker run --rm -v "`pwd`:/work" wtanaka/alpine-37-uid pwd | grep '^/work$'
+- docker run --rm -v "`pwd`:/work" cliwrap/alpine-37 pwd | grep '^/work$'
 # Test volume mount only
-- docker run --rm -v "`pwd`:/work" wtanaka/alpine-37-uid whoami | grep '^root$'
+- docker run --rm -v "`pwd`:/work" cliwrap/alpine-37 whoami | grep '^root$'
 # Test user id only
-- docker run --rm -e "HOSTUID=`id -u`" wtanaka/alpine-37-uid pwd | grep '^/home/hostuser$'
+- docker run --rm -e "HOSTUID=`id -u`" cliwrap/alpine-37 pwd | grep '^/home/hostuser$'
 # Test user id only
-- docker run --rm -e "HOSTUID=`id -u`" wtanaka/alpine-37-uid whoami | grep '^hostuser$'
+- docker run --rm -e "HOSTUID=`id -u`" cliwrap/alpine-37 whoami | grep '^hostuser$'
 after_success:
 - >
   curl -H "Content-Type: application/json"
   --data '{"source_type": "Branch", "source_name": "master"}'
   -X POST
-  https://registry.hub.docker.com/u/wtanaka/alpine-37-uid/trigger/ab4fab48-84ef-4501-847e-be1b95fdc275/
+  https://hub.docker.com/api/build/v1/source/46f420c4-88bf-4b12-8eef-1438a122c9d4/trigger/9fc068cb-338b-498c-8565-9306269ad9bb/call/
 notifications:
   email:
     recipients:
