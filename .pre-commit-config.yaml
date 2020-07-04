@@ -1,0 +1,32 @@
+---
+repos:
+    - repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
+      rev: v1.1.1
+      hooks:
+          - id: markdown-toc
+      # optional custom config:
+            args: [--indent, '    ', -i]
+          - id: dockerfile_lint
+      # optional custom config:
+            args: [--json, --verbose, --dockerfile]
+    - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
+      rev: v0.1.0
+      hooks:
+          - id: dockerfilelint
+            stages: [commit]
+
+    - repo: https://github.com/IamTheFij/docker-pre-commit
+      rev: v2.0.0
+      hooks:
+          - id: hadolint
+
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.1.0 # Use the ref you want to point at
+      hooks:
+          - id: check-yaml
+
+    - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+      rev: 0.0.11 # or specific tag
+      hooks:
+          - id: yamlfmt
+
