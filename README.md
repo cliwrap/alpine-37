@@ -1,5 +1,8 @@
 [![Build
 Status](https://travis-ci.com/cliwrap/alpine-37.svg?branch=master)](https://travis-ci.com/cliwrap/alpine-37)
+[![CircleCI](https://circleci.com/gh/cliwrap/alpine-37.svg?style=svg)](https://circleci.com/gh/cliwrap/ansible-37)
+[![CII Best
+Practices](https://bestpractices.coreinfrastructure.org/projects/4118/badge)](https://bestpractices.coreinfrastructure.org/projects/4118)
 
 The `Dockerfile` in this repository builds an `alpine:3.7` container
 which lets you run commands inside the container using a UID and GID
