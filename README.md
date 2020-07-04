@@ -1,6 +1,15 @@
 [![Build
 Status](https://travis-ci.com/cliwrap/alpine-37.svg?branch=master)](https://travis-ci.com/cliwrap/alpine-37)
 [![CircleCI](https://circleci.com/gh/cliwrap/alpine-37.svg?style=svg)](https://circleci.com/gh/cliwrap/ansible-37)
+[![Docker
+Stars](https://img.shields.io/docker/stars/cliwrap/alpine-37.svg)](https://hub.docker.com/r/cliwrap/alpine-37/)
+[![Docker
+Pulls](https://img.shields.io/docker/pulls/cliwrap/alpine-37.svg)](https://hub.docker.com/r/cliwrap/alpine-37/)
+[![Docker Automated
+build](https://img.shields.io/docker/cloud/automated/cliwrap/alpine-37.svg)](https://hub.docker.com/r/cliwrap/alpine-37/)
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/cliwrap/alpine-37)](https://hub.docker.com/r/cliwrap/alpine-37/)
+[![Image](https://images.microbadger.com/badges/image/cliwrap/alpine-37.svg)](https://microbadger.com/images/cliwrap/alpine-37)
+[![Version](https://images.microbadger.com/badges/version/cliwrap/alpine-37.svg)](https://microbadger.com/images/cliwrap/alpine-37)
 [![CII Best
 Practices](https://bestpractices.coreinfrastructure.org/projects/4118/badge)](https://bestpractices.coreinfrastructure.org/projects/4118)
 
